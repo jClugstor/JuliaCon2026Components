@@ -83,6 +83,18 @@
   .legend{display:flex;flex-wrap:wrap;gap:14px;margin:4px 4px 10px;font-size:12.5px;color:var(--muted)}
   .legend .k{display:inline-flex;align-items:center;gap:6px}
   .legend .sw{width:16px;height:3px;border-radius:2px;display:inline-block}
+  .schem{max-width:920px;margin:6px auto 4px;display:block}
+  .schem .w path{stroke:#7f95ba;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .schem .w path.rail{stroke:#b9c6df;stroke-width:2.5}
+  .schem .pass path{stroke:#b9c6df;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .schem .dot{fill:#9fb3d4}
+  .schem .port{fill:var(--card);stroke:var(--purple);stroke-width:2}
+  .schem use.nm{color:var(--teal)} .schem use.pm{color:var(--pink)}
+  .schem text{font-size:13px;font-weight:600;fill:#c7d3ea}
+  .schem text.dim{font-weight:500;font-size:11.5px;fill:#8ea0bf}
+  .schem text.cap{font-weight:600;font-size:10.5px;letter-spacing:.18em;fill:#5f7089}
+  .schem text.tn{fill:var(--teal)} .schem text.tp{fill:var(--pink)}
+  .schem text.ta{fill:var(--amber);font-style:italic}
 </style>
 </head>
 <body>
@@ -146,6 +158,135 @@
       fraction of a millivolt.
     </p>
     <div class="grid">
+      <div class="card reveal full">
+        <h3>Circuit schematic</h3>
+        <div class="sub">The exact topology of the simulated <code>CMOSOpAmp</code> Dyad component — eight EKV FETs, one resistor, two capacitors, self-biased from the rails</div>
+        <div class="legend">
+          <span class="k"><span class="sw" style="background:var(--teal)"></span>NMOS</span>
+          <span class="k"><span class="sw" style="background:var(--pink)"></span>PMOS</span>
+          <span class="k"><span class="sw" style="background:var(--amber)"></span>node A (stage-1 output)</span>
+        </div>
+        <svg class="schem" viewBox="0 0 880 520" role="img" aria-label="Two-stage CMOS op-amp schematic: NMOS differential pair M1/M2 with PMOS mirror M3/M4, tail sink M5, PMOS common-source driver M6 with sink M7, Miller capacitor Cc, load Cl, and bias branch Rb with diode-connected M8">
+          <defs>
+            <g id="nfet">
+              <line x1="-26" y1="0" x2="-6" y2="0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="-6" y1="-11" x2="-6" y2="11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              <line x1="0" y1="-14" x2="0" y2="14" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/>
+              <line x1="0" y1="-14" x2="0" y2="-28" stroke="currentColor" stroke-width="2"/>
+              <line x1="0" y1="14" x2="0" y2="28" stroke="currentColor" stroke-width="2"/>
+              <path d="M0 26 L-4.5 17.5 L4.5 17.5 Z" fill="currentColor"/>
+            </g>
+            <g id="pfet">
+              <line x1="-26" y1="0" x2="-14" y2="0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="-10.5" cy="0" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/>
+              <line x1="-6" y1="-11" x2="-6" y2="11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              <line x1="0" y1="-14" x2="0" y2="14" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/>
+              <line x1="0" y1="-14" x2="0" y2="-28" stroke="currentColor" stroke-width="2"/>
+              <line x1="0" y1="14" x2="0" y2="28" stroke="currentColor" stroke-width="2"/>
+              <path d="M0 -16 L-4.5 -24.5 L4.5 -24.5 Z" fill="currentColor"/>
+            </g>
+          </defs>
+
+          <!-- wires -->
+          <g class="w">
+            <path class="rail" d="M80 48 H820"/>
+            <path class="rail" d="M80 470 H820"/>
+            <!-- rail drops -->
+            <path d="M170 48 V72"/><path d="M340 48 V72"/><path d="M560 48 V72"/>
+            <path d="M255 373 V470"/><path d="M560 373 V470"/><path d="M740 373 V470"/>
+            <!-- mirror gate tie + M3 diode connection -->
+            <path d="M196 100 H314"/><path d="M222 100 V150 H170"/>
+            <path d="M170 128 V197"/>
+            <!-- node A: M4 drain / M2 drain, to M6 gate, Cc tee -->
+            <path d="M340 128 V197"/><path d="M340 165 H534 V100"/>
+            <!-- inputs -->
+            <path d="M116 225 H144"/><path d="M366 225 H408"/>
+            <!-- tail node into M5 -->
+            <path d="M170 253 V290 H340 V253"/><path d="M255 290 V317"/>
+            <!-- bias bus M5.g–M7.g, and around to M8.g (hops over M7 source) -->
+            <path d="M281 345 H534"/>
+            <path d="M400 345 V430 H552 A8 8 0 0 1 568 430 H690 V345 H714"/>
+            <!-- M8 diode connection -->
+            <path d="M690 345 V288 H740"/>
+            <!-- second stage & output node (hops over the Rb branch) -->
+            <path d="M560 128 V240"/><path d="M560 317 V240"/>
+            <path d="M560 240 H732 A8 8 0 0 1 748 240 H826"/>
+            <!-- Rb column -->
+            <path d="M740 48 V96"/><path d="M740 155 V317"/>
+            <!-- Cc leads -->
+            <path d="M460 165 V210"/><path d="M460 222 V240 H560"/>
+            <!-- Cl leads -->
+            <path d="M800 240 V336"/><path d="M800 348 V470"/>
+          </g>
+
+          <!-- passives -->
+          <g class="pass">
+            <path d="M740 96 L749 103 L731 110.5 L749 118 L731 125.5 L749 133 L731 140.5 L749 148 L740 155"/>
+            <path d="M444 210 H476"/><path d="M444 222 H476"/>
+            <path d="M784 336 H816"/><path d="M784 348 H816"/>
+          </g>
+
+          <!-- transistors -->
+          <use href="#pfet" class="pm" transform="translate(170 100) scale(-1 1)"/>
+          <use href="#pfet" class="pm" transform="translate(340 100)"/>
+          <use href="#pfet" class="pm" transform="translate(560 100)"/>
+          <use href="#nfet" class="nm" transform="translate(170 225)"/>
+          <use href="#nfet" class="nm" transform="translate(340 225) scale(-1 1)"/>
+          <use href="#nfet" class="nm" transform="translate(255 345) scale(-1 1)"/>
+          <use href="#nfet" class="nm" transform="translate(560 345)"/>
+          <use href="#nfet" class="nm" transform="translate(740 345)"/>
+
+          <!-- junction dots -->
+          <g>
+            <circle class="dot" cx="170" cy="48" r="3.4"/><circle class="dot" cx="340" cy="48" r="3.4"/>
+            <circle class="dot" cx="560" cy="48" r="3.4"/><circle class="dot" cx="740" cy="48" r="3.4"/>
+            <circle class="dot" cx="222" cy="100" r="3.4"/><circle class="dot" cx="170" cy="150" r="3.4"/>
+            <circle class="dot" cx="340" cy="165" r="3.4"/><circle class="dot" cx="460" cy="165" r="3.4"/>
+            <circle class="dot" cx="255" cy="290" r="3.4"/>
+            <circle class="dot" cx="400" cy="345" r="3.4"/><circle class="dot" cx="690" cy="345" r="3.4"/>
+            <circle class="dot" cx="740" cy="288" r="3.4"/>
+            <circle class="dot" cx="560" cy="240" r="3.4"/><circle class="dot" cx="800" cy="240" r="3.4"/>
+            <circle class="dot" cx="255" cy="470" r="3.4"/><circle class="dot" cx="560" cy="470" r="3.4"/>
+            <circle class="dot" cx="740" cy="470" r="3.4"/><circle class="dot" cx="800" cy="470" r="3.4"/>
+          </g>
+
+          <!-- ports -->
+          <circle class="port" cx="112" cy="225" r="4.5"/>
+          <circle class="port" cx="412" cy="225" r="4.5"/>
+          <circle class="port" cx="831" cy="240" r="4.5"/>
+
+          <!-- labels -->
+          <text x="74" y="52" text-anchor="end">V<tspan font-size="10" dy="3">DD</tspan></text>
+          <text x="74" y="474" text-anchor="end">V<tspan font-size="10" dy="3">SS</tspan></text>
+          <text x="112" y="206" text-anchor="middle">in −</text>
+          <text x="412" y="206" text-anchor="middle">in +</text>
+          <text x="831" y="221" text-anchor="middle">out</text>
+          <text class="tp" x="152" y="104" text-anchor="end">M3</text>
+          <text class="tp" x="358" y="104">M4</text>
+          <text class="tp" x="584" y="96">M6</text>
+          <text class="dim" x="584" y="112">2 W</text>
+          <text class="tn" x="184" y="229">M1</text>
+          <text class="tn" x="326" y="229" text-anchor="end">M2</text>
+          <text class="tn" x="241" y="349" text-anchor="end">M5</text>
+          <text class="tn" x="578" y="349">M7</text>
+          <text class="tn" x="758" y="349">M8</text>
+          <text class="dim" x="758" y="128">R<tspan font-size="9" dy="3">b</tspan><tspan dy="-3"> 220 kΩ</tspan></text>
+          <text class="dim" x="482" y="218">C<tspan font-size="9" dy="3">c</tspan><tspan dy="-3"> 2 pF</tspan></text>
+          <text class="dim" x="818" y="330">C<tspan font-size="9" dy="3">l</tspan><tspan dy="-3"> 1 pF</tspan></text>
+          <text class="ta" x="398" y="156">A</text>
+          <circle cx="400" cy="165" r="3.4" fill="var(--amber)"/>
+          <text class="cap" x="255" y="502" text-anchor="middle">INPUT STAGE</text>
+          <text class="cap" x="560" y="502" text-anchor="middle">SECOND STAGE</text>
+          <text class="cap" x="745" y="502" text-anchor="middle">BIAS</text>
+        </svg>
+        <div class="note">
+          M1/M2 form the differential pair on M5's tail current, loaded by the M3/M4 mirror; stage-1
+          output is node A. M6 (sized 2&nbsp;W for zero systematic offset) drives the output against
+          the M7 sink, Miller-compensated by C<sub>c</sub>. R<sub>b</sub> through diode-connected M8
+          sets the reference that M5 and M7 mirror — the amplifier biases itself from the rails.
+          Bulk connections (NMOS→V<sub>SS</sub>, PMOS→V<sub>DD</sub>) are omitted for clarity.
+        </div>
+      </div>
       <div class="card reveal">
         <h3>Open-loop transfer (VTC)</h3>
         <div class="sub">Output vs differential input — the steep crossover is the DC gain</div>
