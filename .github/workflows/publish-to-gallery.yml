@@ -31,6 +31,12 @@ jobs:
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
+          # Safe to opt in here: this job references no secrets, and
+          # persist-credentials:false keeps the GITHUB_TOKEN out of .git/config
+          # so the PR's page JS (run for the screenshot) can't read it. The
+          # publish job holds the secrets and never executes PR code.
+          allow-unsafe-pr-checkout: true
+          persist-credentials: false
 
       - name: Assemble the page
         env:
